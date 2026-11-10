@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mustafa Kemal Atatürk · 10 Kasım</title>
+  <meta name="description" content="Mustafa Kemal Atatürk’ü anma sayfası. Saat, her 10 Kasım’da 09.05’te durur." />
+  <meta name="color-scheme" content="dark" />
+  <meta name="theme-color" content="#0b0b0c" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='28' fill='none' stroke='%23888' stroke-width='4'/%3E%3Cpath d='M32 32H18M32 32L41 16' stroke='%23888' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="sayfa">
+
+    <svg class="saat" id="saat" viewBox="0 0 200 200" role="img" aria-label="Saat">
+      <circle class="kadran" cx="100" cy="100" r="96" />
+      <g class="cizgiler" id="cizgiler"></g>
+      <g class="rakamlar" id="rakamlar"></g>
+      <line class="akrep" id="akrep" x1="100" y1="100" x2="100" y2="54" />
+      <line class="yelkovan" id="yelkovan" x1="100" y1="100" x2="100" y2="22" />
+      <line class="saniye" id="saniye" x1="100" y1="114" x2="100" y2="16" />
+      <circle class="merkez" cx="100" cy="100" r="3.4" />
+    </svg>
+
+    <h1 class="ad">Mustafa Kemal Atatürk</h1>
+    <p class="yillar">1881 – 1938</p>
+
+    <!-- Yalnızca 10 Kasım günü: saat durunca ve saygı duruşu sırasında görünür -->
+    <p class="not" id="not" role="status" hidden>Saat 09.05’te durdu.</p>
+
+    <section class="sahne" id="sahne" aria-label="Mustafa Kemal Atatürk’ün sözleri">
+      <div class="sozler" id="sozler"></div>
+      <div class="kumanda">
+        <button class="ok" id="onceki" type="button" aria-label="Önceki söz">&#8249;</button>
+        <div class="noktalar" id="noktalar"></div>
+        <button class="ok" id="sonraki" type="button" aria-label="Sonraki söz">&#8250;</button>
+      </div>
+    </section>
+
+
+  </main>
+
+  <!--
+    Önizleme için adresin sonuna ekleyin:
+      ?onizleme=gun    → saat 09.05’te durmuş görünür (10 Kasım)
+      ?onizleme=gecis  → 09.04.50’den başlar; 10 saniye sonra 09.05’te durur ve saygı duruşu başlar
+      ?onizleme=an     → saygı duruşunun ilk saniyesinden başlar
+  -->
+  <script src="script.js"></script>
+</body>
+</html>

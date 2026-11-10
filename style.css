@@ -1,0 +1,183 @@
+/* 10 Kasım — sade anma sayfası.
+   Tek şey öne çıkar: 09.05’te duran saat. Gerisi sessiz. */
+
+:root {
+  --zemin: #0b0b0c;
+  --metin: #ebebea;
+  --soluk: #9a9a9a;
+  --kirmizi: #e2434c;
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { height: 100%; }
+
+body {
+  min-height: 100svh;
+  background: var(--zemin);
+  color: var(--metin);
+  font-family: var(--serif);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+[hidden] { display: none !important; }
+
+.sayfa {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(28px, 6vw, 64px) 24px;
+  text-align: center;
+  animation: ac 2.4s ease both;
+}
+
+@keyframes ac { from { opacity: 0; } to { opacity: 1; } }
+
+/* ---- Saat ---------------------------------------------------- */
+
+.saat {
+  width: clamp(180px, 34vmin, 320px);
+  height: auto;
+  display: block;
+  margin-bottom: clamp(26px, 5vh, 44px);
+}
+
+.kadran { fill: none; stroke: var(--soluk); stroke-width: 1; }
+
+.cizgiler line { stroke: var(--soluk); stroke-width: 1.2; }
+
+.rakamlar text {
+  fill: var(--soluk);
+  font-family: var(--serif);
+  font-size: 13px;
+  text-anchor: middle;
+  dominant-baseline: central;
+  font-variant-numeric: lining-nums;
+}
+
+.akrep, .yelkovan, .saniye { stroke-linecap: round; }
+
+.akrep     { stroke: var(--metin); stroke-width: 4.2; }
+.yelkovan  { stroke: var(--metin); stroke-width: 2.6; }
+.saniye    { stroke: var(--kirmizi); stroke-width: 1; }
+.merkez    { fill: var(--metin); }
+
+/* Durduğunda saniye ibresi kalkar */
+.saat.durdu .saniye { display: none; }
+
+/* ---- Yazı ---------------------------------------------------- */
+
+.ad {
+  font-size: clamp(1.9rem, 5vw, 3rem);
+  font-weight: 400;
+  letter-spacing: .02em;
+  line-height: 1.2;
+}
+
+.yillar {
+  margin-top: 10px;
+  color: var(--soluk);
+  font-size: 1.05rem;
+  letter-spacing: .08em;
+  font-variant-numeric: tabular-nums;
+}
+
+.not {
+  margin-top: 18px;
+  color: var(--kirmizi);
+  font-size: 1rem;
+}
+
+/* ---- Sözler -------------------------------------------------- */
+
+.sahne {
+  width: 100%;
+  max-width: 34em;
+  margin-top: clamp(30px, 6vh, 52px);
+  transition: opacity 2s ease;
+}
+
+/* Sözler üst üste dizilir; en uzun söz yüksekliği belirler, sayfa zıplamaz */
+.sozler { display: grid; }
+
+.soz {
+  grid-area: 1 / 1;
+  align-self: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .9s ease, visibility 0s linear .9s;
+}
+
+.soz.aktif {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity .9s ease .3s, visibility 0s;
+}
+
+.soz p {
+  font-style: italic;
+  font-size: clamp(1.08rem, 2.4vw, 1.3rem);
+  line-height: 1.85;
+}
+
+.soz-kaynak {
+  display: block;
+  margin-top: 14px;
+  font-style: normal;
+  font-size: .82rem;
+  letter-spacing: .06em;
+  color: var(--soluk);
+}
+
+.kumanda {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+
+.ok {
+  background: none;
+  border: 0;
+  color: var(--soluk);
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  line-height: 1;
+  padding: 6px 14px;
+  cursor: pointer;
+}
+
+.ok:hover { color: var(--metin); }
+
+.noktalar { display: flex; gap: 10px; }
+
+.nokta {
+  width: 7px;
+  height: 7px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--soluk);
+  background: transparent;
+  cursor: pointer;
+  transition: background .3s ease, border-color .3s ease;
+}
+
+.nokta.aktif { background: var(--kirmizi); border-color: var(--kirmizi); }
+
+.ok:focus-visible, .nokta:focus-visible {
+  outline: 1px dashed var(--soluk);
+  outline-offset: 4px;
+}
+
+/* Saygı duruşu: sözler çekilir, yalnızca saat kalır */
+.durus .sahne { opacity: 0; pointer-events: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .soz, .soz.aktif, .sahne { transition: opacity .3s ease, visibility 0s; }
+  .sayfa { animation: none; }
+}
