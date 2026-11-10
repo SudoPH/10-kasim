@@ -26,8 +26,8 @@
     <h1 class="ad">Mustafa Kemal Atatürk</h1>
     <p class="yillar">1881 – 1938</p>
 
-    <!-- Yalnızca 10 Kasım günü: saat durunca ve saygı duruşu sırasında görünür -->
     <p class="not" id="not" role="status" hidden>Saat 09.05’te durdu.</p>
+    <div class="anma" id="anma" hidden></div>
 
     <section class="sahne" id="sahne" aria-label="Mustafa Kemal Atatürk’ün sözleri">
       <div class="sozler" id="sozler"></div>
@@ -38,15 +38,8 @@
       </div>
     </section>
 
-
   </main>
 
-  <!--
-    Önizleme için adresin sonuna ekleyin:
-      ?onizleme=gun    → saat 09.05’te durmuş görünür (10 Kasım)
-      ?onizleme=gecis  → 09.04.50’den başlar; 10 saniye sonra 09.05’te durur ve saygı duruşu başlar
-      ?onizleme=an     → saygı duruşunun ilk saniyesinden başlar
-  -->
   <script src="script.js"></script>
 </body>
 </html>
