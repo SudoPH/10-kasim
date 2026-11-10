@@ -1,17 +1,12 @@
-/* 10 Kasım — sade anma sayfası.
-   - Analog saat Türkiye saatini gösterir; 10 Kasım günü 09.05'te durur.
-   - 10 Kasım 09.05–09.07: saygı duruşu. Sözler çekilir, yalnızca saat kalır.
-   - Sözlerin her birinin kaynağı altında yazılıdır.
-   Framework yok, bağımlılık yok. */
 (function () {
   'use strict';
 
   var ONIZLEME = new URLSearchParams(location.search).get('onizleme');
   var NS = 'http://www.w3.org/2000/svg';
-  var SURE_MS = 2 * 60 * 1000;   // saygı duruşu: 09.05.00 – 09.07.00
+  var SURE_MS = 2 * 60 * 1000;
   var ROTASYON_MS = 12000;
+  var ANMA_ROTASYON_MS = 7000;
 
-  // Kaynağı belli sözler: [metin, kaynak]
   var sozler = [
     ['Dünyada her şey için, medeniyet için, hayat için, muvaffakiyet için en hakiki mürşit ilimdir, fendir. İlmin ve fennin haricinde mürşit aramak gaflettir, cehalettir, dalâlettir.', 'Samsun, 1924'],
     ['Arkadaşlar, barış istiyoruz, fakat dediğim gibi tam bağımsızlık istiyoruz. Barışın anlamı budur. Bunu istemeye hakkımız ve gücümüz vardır.', 'İzmir, 2 Şubat 1923'],
@@ -24,9 +19,8 @@
 
   function og(id) { return document.getElementById(id); }
   var saat = og('saat'), akrep = og('akrep'), yelkovan = og('yelkovan'),
-      saniye = og('saniye'), not = og('not');
+      saniye = og('saniye'), not = og('not'), anmaYazi = og('anma');
 
-  // ---- Saat çizgileri -----------------------------------------
   var cizgiler = og('cizgiler');
   for (var i = 0; i < 12; i++) {
     var a = i * Math.PI / 6, c = Math.cos(a), s = Math.sin(a);
@@ -38,7 +32,6 @@
     cizgiler.appendChild(l);
   }
 
-  // ---- Saat rakamları
   var rakamlar = og('rakamlar');
   for (var n = 1; n <= 12; n++) {
     var ar = n * Math.PI / 6;
@@ -49,7 +42,6 @@
     rakamlar.appendChild(r);
   }
 
-  // ---- Türkiye saati -------------------------------------------
   var bicim = new Intl.DateTimeFormat('en-GB', {
     timeZone: 'Europe/Istanbul', hourCycle: 'h23',
     year: 'numeric', month: '2-digit', day: '2-digit',
@@ -63,7 +55,6 @@
              saat: +p.hour, dakika: +p.minute, saniye: +p.second };
   }
 
-  // Türkiye yıl boyu UTC+3
   function anmaAni(yil) { return new Date(yil + '-11-10T09:05:00+03:00').getTime(); }
   function ikiHane(n) { return (n < 10 ? '0' : '') + n; }
 
@@ -72,12 +63,12 @@
     var yil = parcala(taban).yil;
     if (ONIZLEME === 'gecis') { return anmaAni(yil) - 10000 + (Date.now() - taban); }
     if (ONIZLEME === 'an')    { return anmaAni(yil) + (Date.now() - taban); }
+    if (ONIZLEME === 'son')   { return anmaAni(yil) + SURE_MS - 8000 + (Date.now() - taban); }
     return Date.now();
   }
 
   function don(el, derece) { el.setAttribute('transform', 'rotate(' + derece + ' 100 100)'); }
 
-  // ---- Sözler ---------------------------------------------------
   var kap = og('sozler'), nokKap = og('noktalar');
   var ogeler = [], noktalar = [], sira = 0, durakli = false;
 
@@ -129,7 +120,33 @@
 
   goster(0);
 
-  // ---- Ana döngü -------------------------------------------------
+  var anmalar = [
+    'Seni saygı, minnet ve özlemle anıyoruz.',
+    'Işıklar içinde uyu.',
+    'Bugün hepimiz 09.05’te durduk.',
+    'Unutmadık, unutmayacağız.',
+    'Emanetine sahip çıkıyoruz.',
+    'Hasretle, saygıyla ve minnetle.'
+  ];
+  var anmaSatirlar = [], anmaSira = 0;
+
+  anmalar.forEach(function (metin) {
+    var p = document.createElement('p');
+    p.className = 'anma-satir';
+    p.textContent = metin;
+    anmaYazi.appendChild(p);
+    anmaSatirlar.push(p);
+  });
+
+  function anmaGit(i) {
+    anmaSira = (i + anmalar.length) % anmalar.length;
+    anmaSatirlar.forEach(function (p, k) { p.classList.toggle('aktif', k === anmaSira); });
+  }
+
+  setInterval(function () {
+    if (!anmaYazi.hidden && !document.hidden) { anmaGit(anmaSira + 1); }
+  }, ANMA_ROTASYON_MS);
+
   var sonEtiket = '';
 
   function tik() {
@@ -149,6 +166,9 @@
     saat.classList.toggle('durdu', durdu);
     document.body.classList.toggle('durus', durusta);
     not.hidden = !durdu;
+    var anmaGorunsun = ONIZLEME === 'gun' || (nov10 && t >= anma + SURE_MS);
+    if (anmaGorunsun && anmaYazi.hidden) { anmaGit(0); }
+    anmaYazi.hidden = !anmaGorunsun;
     not.textContent = durusta ? 'Saygı duruşu.' : 'Saat 09.05’te durdu.';
 
     var etiket = 'Saat ' + ikiHane(h) + '.' + ikiHane(m);
